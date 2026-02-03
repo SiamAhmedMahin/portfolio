@@ -146,6 +146,28 @@ svg {
     transition: var(--transition);
 }
 
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--text-primary);
+}
+
+/* Scroll Reveal Animation */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* Hero Section */
 .hero {
     min-height: 100vh;
@@ -815,36 +837,10 @@ svg {
 
 @media (max-width: 768px) {
     .back-to-top {
-        color: var(--text-primary);
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-        z-index: 999;
-    }
-
-    .back-to-top.visible {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .back-to-top:hover {
-        background: var(--text-primary);
-        color: var(--bg-primary);
-        transform: translateY(-3px);
-    }
-
-    @media (max-width: 768px) {
-        .back-to-top {
-            bottom: 1.5rem;
-            right: 1.5rem;
-        }
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 40px;
+        height: 40px;
     }
 }
 

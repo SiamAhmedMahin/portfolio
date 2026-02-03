@@ -240,7 +240,7 @@ window.openDetails = (item) => {
             </div>
         `;
     } else if (bannerImg) {
-        contentHTML += `<img src="${bannerImg}" class="modal-banner" alt="Banner">`;
+        contentHTML += `<img src="${bannerImg}" class="modal-banner" alt="Banner" loading="lazy">`;
     }
 
 
