@@ -1,4 +1,4 @@
-import { fetchPortfolioData, submitMessage } from './api.js';
+import { fetchPortfolioData } from './api.js';
 import { renderAll } from './ui.js';
 
 // Main Frontend Logic
@@ -47,46 +47,7 @@ if (navToggle) {
     });
 }
 
-// 3. Contact Form Submission
-const contactForm = document.getElementById('contact-form');
-const contactStatus = document.getElementById('contact-status');
-
-if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const submitBtn = contactForm.querySelector('button[type="submit"]');
-        const originalBtnText = submitBtn.innerText;
-
-        // Reset status
-        contactStatus.innerText = 'Sending message...';
-        contactStatus.className = 'status-msg';
-        contactStatus.style.display = 'block';
-        submitBtn.disabled = true;
-
-        try {
-            const formData = new FormData(contactForm);
-            const payload = {
-                name: formData.get('name'),
-                email: formData.get('email'),
-                message: formData.get('message')
-            };
-
-            await submitMessage(payload);
-
-            contactStatus.innerText = 'Success! Your message has been sent.';
-            contactStatus.className = 'status-msg success';
-            contactForm.reset();
-        } catch (err) {
-            console.error("Form error:", err);
-            contactStatus.innerText = 'Oops! Failed to send. Please try again or email me.';
-            contactStatus.className = 'status-msg error';
-        } finally {
-            submitBtn.disabled = false;
-        }
-    });
-}
-
-// 4. Back to Top
+// 3. Back to Top
 const backToTopBtn = document.getElementById('back-to-top');
 if (backToTopBtn) {
     window.addEventListener('scroll', () => {
