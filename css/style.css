@@ -152,15 +152,34 @@ svg {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 6rem 2rem 4rem;
+    padding: 6rem 0 4rem; /* Removed horizontal padding from section to let container handle it */
     position: relative;
 }
 
+.hero-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    width: 100%;
+}
+
+.hero-content {
+    flex: 1;
+    text-align: left;
+    max-width: 600px; /* Prevent text from stretching too far */
+}
+
+.hero-visual {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
 .hero-image-container {
-    width: 260px;
-    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 500px; /* Larger on desktop */
+    margin-bottom: 0; /* Remove bottom margin as it's side-by-side */
     position: relative;
     /* Soften edges to blend into background */
     mask-image: radial-gradient(circle at center, black 30%, transparent 95%);
@@ -185,24 +204,25 @@ svg {
 }
 
 .hero-title {
-    font-size: 4rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.5rem;
+    font-size: 4.5rem; /* Slightly larger for professional impact */
+    font-weight: 800; /* Bolder */
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
     color: var(--text-primary);
+    line-height: 1.1;
 }
 
 .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     color: var(--text-secondary);
     font-weight: 400;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
     letter-spacing: 0.02em;
 }
 
 .scroll-indicator {
     position: absolute;
-    bottom: 3rem;
+    bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -228,16 +248,54 @@ svg {
 /* Hero Content Area */
 .hero-cta {
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Horizontal on desktop */
     align-items: center;
-    gap: 2.5rem;
-    margin-top: 2rem;
+    gap: 2rem;
+    margin-top: 1rem;
 }
 
 .hero-socials {
     display: flex;
-    gap: 2.5rem;
+    gap: 1.5rem;
     align-items: center;
+}
+
+/* --- Mobile Responsiveness for Hero --- */
+@media (max-width: 992px) {
+    .hero-container {
+        flex-direction: column-reverse; /* Stack: Visual Top, Content Bottom */
+        text-align: center;
+        gap: 3rem;
+    }
+
+    .hero-content {
+        text-align: center;
+        align-items: center;
+    }
+
+    .hero-visual {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .hero-image-container {
+        max-width: 300px; /* Smaller on mobile */
+        margin: 0 auto;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+        width: 100%;
+        gap: 2rem;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
 }
 
 /* Buttons and Global Links */
