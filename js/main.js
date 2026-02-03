@@ -2,6 +2,7 @@ import { fetchPortfolioData } from './api.js';
 import { renderAll } from './ui.js';
 
 // Main Frontend Logic
+const loader = document.getElementById('site-loader');
 const yearSpan = document.getElementById('year');
 if (yearSpan) yearSpan.innerText = new Date().getFullYear();
 
@@ -9,8 +10,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const data = await fetchPortfolioData();
         renderAll(data);
+
+        // Hide Loader
+        if (loader) {
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 500);
+            }, 500); // Slight delay for smooth transition
+        }
+
     } catch (err) {
         console.error("Error loading content:", err);
+        if (loader) loader.innerHTML = "<div class='container' style='text-align:center'><p style='color:white'>Failed to load content.</p><button onclick='location.reload()' class='btn btn-primary' style='margin-top:1rem'>Retry</button></div>";
     }
 });
 
