@@ -52,6 +52,7 @@
                 <button onclick="showTab('projects')">Projects</button>
                 <button onclick="showTab('skills')">Skills</button>
                 <button onclick="showTab('achievements')">Achievements</button>
+                <button onclick="showTab('themes')">Themes</button>
                 <button onclick="logout()" style="margin-top: 2rem; background: #dc3545;">Logout</button>
             </nav>
         </aside>
@@ -68,15 +69,6 @@
                     <div class="form-group">
                         <label>Hero Subtitle</label>
                         <input type="text" name="heroSubtitle" id="heroSubtitle">
-                    </div>
-                    <div class="form-group">
-                        <label>Website Theme</label>
-                        <select id="themeSelect">
-                            <option value="default">Dark Minimalist (Default)</option>
-                            <option value="light">Professional Light</option>
-                            <option value="midnight">Midnight Blue</option>
-                            <option value="forest">Deep Forest</option>
-                        </select>
                     </div>
                     <div class="form-group">
                         <label>Profile Image</label>
@@ -107,6 +99,17 @@
                     </div>
                     <button type="submit" class="btn-primary">Save Changes</button>
                 </form>
+            </div>
+
+            <!-- Themes Tab -->
+            <div id="themes" class="tab-content">
+                <h1>Select Theme</h1>
+                <p style="margin-bottom: 2rem; color: #888;">Choose a visual style for your portfolio.</p>
+                <div class="theme-grid" id="theme-grid">
+                    <!-- Theme cards injected via JS -->
+                </div>
+                <button onclick="saveThemeConfig()" class="btn-primary"
+                    style="margin-top: 2rem; max-width: 200px;">Apply Theme</button>
             </div>
 
             <!-- Experience Tab -->

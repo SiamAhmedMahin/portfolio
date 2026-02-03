@@ -74,13 +74,18 @@ window.showTab = (tabId) => {
 // --- DATA HANDLING ---
 
 /* 1. General Config */
+let globalConfig = {}; // Store full config
+
 async function loadGeneral() {
     const { data, error } = await supabaseClient.from('config').select('*').eq('key', 'global').single();
     if (data && data.value) {
+        globalConfig = data.value; // Keep reference
         const val = data.value;
         document.getElementById('heroName').value = val.heroName || '';
         document.getElementById('heroSubtitle').value = val.heroSubtitle || '';
-        document.getElementById('themeSelect').value = val.theme || 'default'; // Load theme
+        // Theme loaded in separate tab logic
+        renderThemes(val.theme || 'default');
+
         document.getElementById('aboutText').value = val.aboutText || '';
         document.getElementById('resumeUrl').value = val.resumeUrl || '';
         document.getElementById('linkedinUrl').value = val.socials?.linkedin || '';
@@ -106,25 +111,66 @@ document.getElementById('general-form').addEventListener('submit', async (e) => 
         imageUrl = await uploadFile(fileInput.files[0], 'profile');
     }
 
-    const payload = {
-        heroName: document.getElementById('heroName').value,
-        heroSubtitle: document.getElementById('heroSubtitle').value,
-        theme: document.getElementById('themeSelect').value, // Save theme
-        aboutText: document.getElementById('aboutText').value,
-        resumeUrl: document.getElementById('resumeUrl').value,
-        profileImage: imageUrl,
-        socials: {
-            linkedin: document.getElementById('linkedinUrl').value,
-            github: document.getElementById('githubUrl').value,
-            email: document.getElementById('emailContact').value
-        }
+    // Update global config object
+    globalConfig.heroName = document.getElementById('heroName').value;
+    globalConfig.heroSubtitle = document.getElementById('heroSubtitle').value;
+    globalConfig.aboutText = document.getElementById('aboutText').value;
+    globalConfig.resumeUrl = document.getElementById('resumeUrl').value;
+    globalConfig.profileImage = imageUrl;
+    globalConfig.socials = {
+        linkedin: document.getElementById('linkedinUrl').value,
+        github: document.getElementById('githubUrl').value,
+        email: document.getElementById('emailContact').value
     };
 
-    const { error } = await supabaseClient.from('config').upsert({ key: 'global', value: payload });
+    const { error } = await supabaseClient.from('config').upsert({ key: 'global', value: globalConfig });
     toggleLoader(false);
     if (error) alert('Error: ' + error.message);
     else alert('Saved!');
 });
+
+
+/* Theme Logic */
+const availableThemes = [
+    { id: 'default', name: 'Dark Minimalist', bg: '#050505', sec: '#111111', txt: '#ffffff' },
+    { id: 'light', name: 'Professional Light', bg: '#ffffff', sec: '#f8f9fa', txt: '#333333' },
+    { id: 'midnight', name: 'Midnight Blue', bg: '#0f172a', sec: '#1e293b', txt: '#f1f5f9' },
+    { id: 'forest', name: 'Deep Forest', bg: '#051a10', sec: '#0a2518', txt: '#e2e8f0' }
+];
+
+let selectedTheme = 'default';
+
+function renderThemes(currentTheme) {
+    selectedTheme = currentTheme;
+    const container = document.getElementById('theme-grid');
+    container.innerHTML = availableThemes.map(t => `
+        <div class="theme-card ${t.id === selectedTheme ? 'selected' : ''}" onclick="selectTheme('${t.id}')">
+            <div class="theme-preview">
+                <div class="theme-preview-main" style="--preview-bg: ${t.bg}"></div>
+                <div class="theme-preview-sub" style="--preview-bg-sec: ${t.sec}">
+                    <div class="theme-preview-text" style="--preview-text: ${t.txt}"></div>
+                </div>
+            </div>
+            <div class="theme-info">
+                <div class="theme-name">${t.name}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+window.selectTheme = (id) => {
+    selectedTheme = id;
+    renderThemes(id); // Re-render to show selection
+}
+
+window.saveThemeConfig = async () => {
+    toggleLoader(true);
+    globalConfig.theme = selectedTheme;
+    const { error } = await supabaseClient.from('config').upsert({ key: 'global', value: globalConfig });
+    toggleLoader(false);
+    if (error) alert('Error: ' + error.message);
+    else alert('Theme Applied!');
+}
 
 /* Helper: Upload File to Supabase Storage */
 async function uploadFile(file, folder) {
