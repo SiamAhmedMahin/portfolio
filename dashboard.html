@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+
+    <!-- Supabase SDK -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+    <!-- Loading Overlay -->
+    <div id="loader" class="loading-overlay hidden">
+        <div class="spinner">Loading...</div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>Admin Login</h2>
+            <form id="login-form">
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+            <p id="login-error"
+                style="color: white; background: #dc3545; padding: 10px; margin-top: 10px; border-radius: 4px; display: none;">
+            </p>
+            <script>
+                // Observer to show error when text is added
+                const observer = new MutationObserver((mutations) => {
+                    const el = document.getElementById('login-error');
+                    el.style.display = el.innerText ? 'block' : 'none';
+                });
+                observer.observe(document.getElementById('login-error'), { childList: true, characterData: true, subtree: true });
+            </script>
+        </div>
+    </div>
+
+    <!-- Dashboard App -->
+    <div id="dashboard-app" class="hidden">
+        <aside class="sidebar">
+            <h2>CMS Dashboard</h2>
+            <nav class="nav-tabs">
+                <button onclick="showTab('general')" class="active">General & Hero</button>
+                <button onclick="showTab('experience')">Experience</button>
+                <button onclick="showTab('projects')">Projects</button>
+                <button onclick="showTab('skills')">Skills</button>
+                <button onclick="showTab('achievements')">Achievements</button>
+                <button onclick="logout()" style="margin-top: 2rem; background: #dc3545;">Logout</button>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <!-- General Tab -->
+            <div id="general" class="tab-content active">
+                <h1>General Configuration</h1>
+                <form id="general-form">
+                    <div class="form-group">
+                        <label>Hero Title (Name)</label>
+                        <input type="text" name="heroName" id="heroName">
+                    </div>
+                    <div class="form-group">
+                        <label>Hero Subtitle</label>
+                        <input type="text" name="heroSubtitle" id="heroSubtitle">
+                    </div>
+                    <div class="form-group">
+                        <label>Profile Image</label>
+                        <input type="file" id="profileImageInput">
+                        <input type="hidden" name="profileImageUrl" id="profileImageUrl">
+                        <img id="profilePreview" class="preview-img" src="" alt="">
+                    </div>
+                    <div class="form-group">
+                        <label>About Me Text (HTML allowed)</label>
+                        <textarea name="aboutText" id="aboutText" rows="6"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Resume URL</label>
+                        <input type="text" name="resumeUrl" id="resumeUrl">
+                    </div>
+                    <h3>Social Links</h3>
+                    <div class="form-group">
+                        <label>LinkedIn URL</label>
+                        <input type="text" name="linkedinUrl" id="linkedinUrl">
+                    </div>
+                    <div class="form-group">
+                        <label>GitHub URL</label>
+                        <input type="text" name="githubUrl" id="githubUrl">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="text" name="email" id="emailContact">
+                    </div>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </form>
+            </div>
+
+            <!-- Experience Tab -->
+            <div id="experience" class="tab-content">
+                <h1>Experience</h1>
+                <div class="form-group">
+                    <button onclick="openModal('experience')" class="btn-primary">Add New Experience</button>
+                </div>
+                <div id="experience-list" class="item-list"></div>
+            </div>
+
+            <!-- Projects Tab -->
+            <div id="projects" class="tab-content">
+                <h1>Projects</h1>
+                <div class="form-group">
+                    <button onclick="openModal('project')" class="btn-primary">Add New Project</button>
+                </div>
+                <div id="projects-list" class="item-list"></div>
+            </div>
+
+            <!-- Skills Tab -->
+            <div id="skills" class="tab-content">
+                <h1>Skills</h1>
+                <form id="skills-form">
+                    <div class="form-group">
+                        <label>Add Skill (comma separated)</label>
+                        <input type="text" id="newSkillInput">
+                        <button type="button" onclick="addSkill()" class="btn-primary"
+                            style="width: auto; margin-top: 10px;">Add</button>
+                    </div>
+                    <div id="skills-container" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+                        <!-- Skills will be rendered here as pills -->
+                    </div>
+                </form>
+            </div>
+
+            <!-- Achievements Tab -->
+            <div id="achievements" class="tab-content">
+                <h1>Achievements</h1>
+                <div class="form-group">
+                    <button onclick="openModal('achievement')" class="btn-primary">Add New Achievement</button>
+                </div>
+                <div id="achievements-list" class="item-list"></div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Generic Modal for Add/Edit -->
+    <div id="edit-modal" class="loading-overlay hidden" style="background: rgba(0,0,0,0.5);">
+        <div class="login-box" style="text-align: left; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+            <h2 id="modal-title">Edit Item</h2>
+            <form id="modal-form">
+                <input type="hidden" id="modal-collection">
+                <input type="hidden" id="modal-id">
+                <div id="modal-fields"></div>
+                <button type="submit" class="btn-primary">Save</button>
+                <button type="button" onclick="closeModal()"
+                    style="margin-top: 10px; background: #6c757d; border: none; color: white; padding: 10px; width: 100%; border-radius: 4px; cursor: pointer;">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>
