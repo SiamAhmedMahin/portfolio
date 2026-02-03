@@ -360,12 +360,13 @@ svg {
 
 .btn-secondary {
     background-color: transparent;
-    color: var(--text-primary);
+    color: var(--text-secondary);
     border: 1px solid var(--border-color);
 }
 
 .btn-secondary:hover {
-    border-color: var(--text-primary);
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
 }
 
 /* Projects Section */

@@ -79,7 +79,9 @@ function renderConfig(data) {
     // Resume
     const resumeBtn = document.getElementById('hero-resume');
     if (data.resumeUrl) resumeBtn.href = data.resumeUrl;
-    else resumeBtn.style.display = 'none';
+    // Keep default assets/cv.pdf if nothing in DB, and don't hide
+    else resumeBtn.href = 'assets/cv.pdf';
+    resumeBtn.style.display = 'inline-flex';
 
     // Socials
     const socialHTML = generateSocialIcons(data.socials);
