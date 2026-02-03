@@ -85,6 +85,7 @@ async function loadGeneral() {
         document.getElementById('heroSubtitle').value = val.heroSubtitle || '';
         // Theme loaded in separate tab logic
         renderThemes(val.theme || 'default');
+        applyThemeToDashboard(val.theme || 'default'); // Apply on load
 
         document.getElementById('aboutText').value = val.aboutText || '';
         document.getElementById('resumeUrl').value = val.resumeUrl || '';
@@ -158,9 +159,34 @@ function renderThemes(currentTheme) {
     `).join('');
 }
 
+function applyThemeToDashboard(themeId) {
+    const t = availableThemes.find(theme => theme.id === themeId);
+    if (!t) return;
+
+    // Apply consistent variables to dashboard root
+    const root = document.documentElement;
+    root.style.setProperty('--bg-primary', t.bg);
+    root.style.setProperty('--bg-card', t.sec); // Use secondary as card bg for contrast or map correctly
+    root.style.setProperty('--text-primary', t.txt);
+
+    // If exact mapping differs from main site, we adjust here.
+    // Main Site: 
+    // --bg-primary, --bg-secondary, --bg-card, --text-primary
+
+    // Admin CSS uses specific vars updates:
+    root.style.setProperty('--bg-primary', t.bg);
+    root.style.setProperty('--bg-card', t.sec);
+    root.style.setProperty('--text-primary', t.txt);
+
+    // Also update body background just in case
+    document.body.style.backgroundColor = t.bg;
+    document.body.style.color = t.txt;
+}
+
 window.selectTheme = (id) => {
     selectedTheme = id;
-    renderThemes(id); // Re-render to show selection
+    renderThemes(id);
+    applyThemeToDashboard(id); // Immediate visual feedback
 }
 
 window.saveThemeConfig = async () => {
@@ -322,13 +348,15 @@ const schemas = {
         { name: 'status', label: 'Status', type: 'text' },
         { name: 'techstack', label: 'Tech Stack (comma separated)', type: 'text' },
         { name: 'link', label: 'Project Link', type: 'text' },
-        { name: 'imageurl', label: 'Project Image', type: 'file' }
+        { name: 'imageurl', label: 'Thumbnail (Square Logo)', type: 'file' },
+        { name: 'bannerurl', label: 'Detail Banner (Free Size)', type: 'file' }
     ],
     achievements: [
         { name: 'title', label: 'Title', type: 'text' },
         { name: 'category', label: 'Category', type: 'text' },
         { name: 'icon', label: 'Icon (SVG String)', type: 'textarea' },
-        { name: 'imageurl', label: 'Achievement Image', type: 'file' }
+        { name: 'imageurl', label: 'Thumbnail (Square)', type: 'file' },
+        { name: 'bannerurl', label: 'Detail Banner (Free Size)', type: 'file' }
     ],
     education: [
         { name: 'school', label: 'School / University', type: 'text' },
@@ -336,7 +364,8 @@ const schemas = {
         { name: 'start_year', label: 'Starting Year', type: 'text' },
         { name: 'end_year', label: 'Completion / Expected Year', type: 'text' },
         { name: 'cgpa', label: 'CGPA (Optional)', type: 'text' },
-        { name: 'imageurl', label: 'Institution Logo/Image', type: 'file' }
+        { name: 'imageurl', label: 'Logo (Square)', type: 'file' },
+        { name: 'bannerurl', label: 'Campus/Detail Image (Free Size)', type: 'file' }
     ]
 };
 

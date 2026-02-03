@@ -163,10 +163,20 @@
                 <!-- Socials duplicated here -->
             </div>
             <p style="margin-top: 3rem; font-size: 0.8rem; color: #555;">&copy; <span id="year">2026</span> Khandaker
-                Siam Ahmed. All rights reserved. <br><br> <a href="dashboard.html"
+                Siam Ahmed. All rights reserved. <br><br> <a href="dashboard.html" target="_blank"
                     style="color: #888; text-decoration: none; font-size: 0.7rem;">Admin Login</a></p>
         </div>
     </footer>
+
+    <!-- Details Modal -->
+    <div id="details-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeDetails()">&times;</button>
+            <div class="modal-body" id="modal-body-content">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
 
     <script src="js/main.js"></script>
 </body>

@@ -157,10 +157,10 @@ function renderProjects(items) {
     if (!items || items.length === 0) return;
     const container = document.getElementById('projects-grid');
     container.innerHTML = items.map(item => `
-        <article class="project-card">
+        <article class="project-card" onclick='openDetails(${JSON.stringify(item).replace(/'/g, "&#39;")})' style="cursor: pointer;">
             <div class="project-image">
                 ${item.imageurl
-            ? `<img src="${item.imageurl}" alt="${item.title}" style="width:100%; height:100%; object-fit:cover;">`
+            ? `<img src="${item.imageurl}" alt="${item.title}" style="width:100%; height:100%; object-fit:contain; padding: 10px;">`
             : `<div class="project-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle></svg></div>`
         }
             </div>
@@ -170,7 +170,7 @@ function renderProjects(items) {
                 </div>
                 <span class="project-category">${item.category || 'Development'}</span>
                 <h3 class="project-title">${item.title}</h3>
-                <p class="project-description">${item.description}</p>
+                <p class="project-description">${item.description ? item.description.substring(0, 100) + '...' : ''}</p>
                 <div class="project-tech">
                     ${(item.techstack || []).map(t => `<span class="tech-tag">${t}</span>`).join('')}
                 </div>
@@ -191,10 +191,10 @@ function renderEducation(items) {
     if (!items || items.length === 0) return;
     const container = document.getElementById('education-grid');
     container.innerHTML = items.map(item => `
-        <article class="project-card">
+        <article class="project-card" onclick='openDetails(${JSON.stringify(item).replace(/'/g, "&#39;")})' style="cursor: pointer;">
             ${item.imageurl ? `
                 <div class="project-image">
-                    <img src="${item.imageurl}" alt="${item.school}" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="${item.imageurl}" alt="${item.school}" style="width:100%; height:100%; object-fit:contain; padding: 10px;">
                 </div>
             ` : ''}
             <div class="project-content" style="padding: 2rem;">
@@ -215,10 +215,10 @@ function renderAchievements(items) {
     if (!items || items.length === 0) return;
     const container = document.getElementById('achievements-grid');
     container.innerHTML = items.map(item => `
-        <div class="project-card">
+        <div class="project-card" onclick='openDetails(${JSON.stringify(item).replace(/'/g, "&#39;")})' style="cursor: pointer;">
             ${item.imageurl ? `
                 <div class="project-image">
-                    <img src="${item.imageurl}" alt="${item.title}" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="${item.imageurl}" alt="${item.title}" style="width:100%; height:100%; object-fit:contain; padding: 10px;">
                 </div>
             ` : ''}
             <div class="project-content" style="padding: 2rem;">
@@ -235,6 +235,73 @@ function setText(id, text) {
     const el = document.getElementById(id);
     if (el && text) el.innerText = text;
 }
+
+/* Modal Logic */
+window.openDetails = (item) => {
+    const modal = document.getElementById('details-modal');
+    const body = document.getElementById('modal-body-content');
+
+    // Choose Banner (Priority) or Thumbnail or Placeholder
+    const bannerImg = item.bannerurl || item.imageurl;
+
+    // Determine Type (Project, Edu, Achievement) based on fields
+    // Projects have 'techstack', Edu has 'school', Achievement has 'icon' or 'category'
+    const isEdu = item.school !== undefined;
+
+    let contentHTML = '';
+
+    if (bannerImg) {
+        contentHTML += `<img src="${bannerImg}" class="modal-banner" alt="Banner">`;
+    }
+
+    contentHTML += `<div class="modal-header">`;
+
+    if (isEdu) {
+        contentHTML += `<span class="project-status">${item.start_year} - ${item.end_year}</span>`;
+        contentHTML += `<h2 class="modal-title" style="margin-top: 10px;">${item.school}</h2>`;
+        contentHTML += `<p class="modal-subtitle">${item.major}</p>`;
+    } else {
+        if (item.status) contentHTML += `<span class="project-status">${item.status}</span>`;
+        contentHTML += `<h2 class="modal-title" style="margin-top: 10px;">${item.title}</h2>`;
+        contentHTML += `<p class="modal-subtitle">${item.category || ''}</p>`;
+    }
+
+    contentHTML += `</div>`;
+
+    contentHTML += `<div class="modal-info">`;
+
+    if (item.description) {
+        contentHTML += `<p>${item.description.replace(/\n/g, '<br>')}</p>`;
+    }
+
+    // Tech Stack
+    if (item.techstack && item.techstack.length > 0) {
+        contentHTML += `<div class="modal-tech">`;
+        item.techstack.forEach(t => {
+            contentHTML += `<span class="skill-pill">${t}</span>`;
+        });
+        contentHTML += `</div>`;
+    }
+
+    // Links
+    if (item.link) {
+        contentHTML += `<a href="${item.link}" target="_blank" class="btn btn-primary" style="margin-top: 1rem;">View Project</a>`;
+    }
+
+    contentHTML += `</div>`;
+
+    body.innerHTML = contentHTML;
+    modal.style.display = 'flex';
+};
+
+window.closeDetails = () => {
+    document.getElementById('details-modal').style.display = 'none';
+};
+
+// Close on outside click
+document.getElementById('details-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'details-modal') window.closeDetails();
+});
 
 /* Nav Toggle Logic (Kept from original) */
 const navToggle = document.getElementById('nav-toggle');
