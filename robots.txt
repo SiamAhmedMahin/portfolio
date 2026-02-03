@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://khandakersiamahmed.github.io/sitemap.xml
