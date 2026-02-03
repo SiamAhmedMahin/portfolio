@@ -99,6 +99,11 @@ function renderConfig(data) {
     const imgObj = document.getElementById('hero-image');
     if (data.profileImage) {
         imgObj.src = data.profileImage;
+    }
+    // Ensure opacity is set to 1 after load (works for both default and new src)
+    if (imgObj.complete) {
+        imgObj.style.opacity = '1';
+    } else {
         imgObj.onload = () => imgObj.style.opacity = '1';
     }
 
