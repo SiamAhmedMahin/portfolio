@@ -152,34 +152,42 @@ svg {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 6rem 0 4rem; /* Removed horizontal padding from section to let container handle it */
+    padding: 6rem 0 4rem;
+    /* Removed horizontal padding from section to let container handle it */
     position: relative;
 }
 
 .hero-container {
     display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    -webkit-flex-direction: row;
     align-items: center;
     justify-content: space-between;
     gap: 4rem;
     width: 100%;
+    text-align: left;
 }
 
 .hero-content {
-    flex: 1;
+    flex: 1.2;
+    -webkit-flex: 1.2;
     text-align: left;
-    max-width: 600px; /* Prevent text from stretching too far */
+    max-width: 800px;
+    /* Increased to accommodate larger text */
 }
 
 .hero-visual {
-    flex: 1;
+    flex: 0.8;
+    -webkit-flex: 0.8;
     display: flex;
+    display: -webkit-flex;
     justify-content: flex-end;
 }
 
 .hero-image-container {
     width: 100%;
-    max-width: 500px; /* Larger on desktop */
-    margin-bottom: 0; /* Remove bottom margin as it's side-by-side */
+    max-width: 450px;
     position: relative;
     /* Soften edges to blend into background */
     mask-image: radial-gradient(circle at center, black 30%, transparent 95%);
@@ -204,20 +212,23 @@ svg {
 }
 
 .hero-title {
-    font-size: 4.5rem; /* Slightly larger for professional impact */
-    font-weight: 800; /* Bolder */
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    /* Responsive font size */
+    font-weight: 800;
     letter-spacing: -0.03em;
     margin-bottom: 1rem;
     color: var(--text-primary);
     line-height: 1.1;
+    text-align: left;
 }
 
 .hero-subtitle {
-    font-size: 1.5rem;
+    font-size: clamp(1rem, 2vw, 1.5rem);
     color: var(--text-secondary);
     font-weight: 400;
     margin-bottom: 2.5rem;
     letter-spacing: 0.02em;
+    text-align: left;
 }
 
 .scroll-indicator {
@@ -248,7 +259,8 @@ svg {
 /* Hero Content Area */
 .hero-cta {
     display: flex;
-    flex-direction: row; /* Horizontal on desktop */
+    flex-direction: row;
+    /* Horizontal on desktop */
     align-items: center;
     gap: 2rem;
     margin-top: 1rem;
@@ -263,7 +275,8 @@ svg {
 /* --- Mobile Responsiveness for Hero --- */
 @media (max-width: 992px) {
     .hero-container {
-        flex-direction: column-reverse; /* Stack: Visual Top, Content Bottom */
+        flex-direction: column-reverse;
+        /* Stack: Visual Top, Content Bottom */
         text-align: center;
         gap: 3rem;
     }
@@ -279,7 +292,8 @@ svg {
     }
 
     .hero-image-container {
-        max-width: 300px; /* Smaller on mobile */
+        max-width: 300px;
+        /* Smaller on mobile */
         margin: 0 auto;
     }
 
@@ -292,7 +306,7 @@ svg {
     .hero-title {
         font-size: 3rem;
     }
-    
+
     .hero-subtitle {
         font-size: 1.2rem;
     }
