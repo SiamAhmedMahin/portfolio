@@ -183,9 +183,9 @@ window.resetProfileImage = () => {
 /* Theme Logic */
 const availableThemes = [
     { id: 'default', name: 'Dark Minimalist', bg: '#050505', sec: '#111111', txt: '#ffffff' },
-    { id: 'light', name: 'Professional Light', bg: '#ffffff', sec: '#f8f9fa', txt: '#333333' },
-    { id: 'midnight', name: 'Midnight Blue', bg: '#0f172a', sec: '#1e293b', txt: '#f1f5f9' },
-    { id: 'forest', name: 'Deep Forest', bg: '#051a10', sec: '#0a2518', txt: '#e2e8f0' }
+    { id: 'titanium', name: 'Titanium Industrial', bg: '#0e0e0e', sec: '#141414', txt: '#e0e0e0' },
+    { id: 'blueprint', name: 'Blueprint Technical', bg: '#0a192f', sec: '#112240', txt: '#e6f1ff' },
+    { id: 'light', name: 'Professional Light', bg: '#ffffff', sec: '#f8f9fa', txt: '#333333' }
 ];
 
 let selectedTheme = 'default';
@@ -213,23 +213,28 @@ function applyThemeToDashboard(themeId) {
     if (!t) return;
 
     // Apply consistent variables to dashboard root
-    const root = document.documentElement;
-    root.style.setProperty('--bg-primary', t.bg);
-    root.style.setProperty('--bg-card', t.sec); // Use secondary as card bg for contrast or map correctly
-    root.style.setProperty('--text-primary', t.txt);
+    // Set Data Attribute for CSS handling
+    if (themeId) {
+        document.documentElement.setAttribute('data-theme', themeId);
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+    }
 
-    // If exact mapping differs from main site, we adjust here.
-    // Main Site: 
-    // --bg-primary, --bg-secondary, --bg-card, --text-primary
+    // Apply basic vars for Dashboard specific elements (if needed fallback)
+    document.documentElement.style.setProperty('--bg-primary', t.bg);
+    document.documentElement.style.setProperty('--bg-card', t.sec);
+    document.documentElement.style.setProperty('--text-primary', t.txt);
 
-    // Admin CSS uses specific vars updates:
-    root.style.setProperty('--bg-primary', t.bg);
-    root.style.setProperty('--bg-card', t.sec);
-    root.style.setProperty('--text-primary', t.txt);
-
-    // Also update body background just in case
+    // Force background
     document.body.style.backgroundColor = t.bg;
     document.body.style.color = t.txt;
+
+    // Add Grid BG class to body if titanium
+    if (themeId === 'titanium') {
+        document.body.classList.add('grid-bg');
+    } else {
+        document.body.classList.remove('grid-bg');
+    }
 }
 
 window.selectTheme = (id) => {

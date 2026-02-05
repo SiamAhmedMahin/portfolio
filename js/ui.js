@@ -1,37 +1,4 @@
-const themes = {
-    default: {
-        '--bg-primary': '#050505',
-        '--bg-secondary': '#0a0a0a',
-        '--bg-card': '#111111',
-        '--text-primary': '#ffffff',
-        '--text-secondary': '#888888',
-        '--border-color': 'rgba(255, 255, 255, 0.1)'
-    },
-    light: {
-        '--bg-primary': '#ffffff',
-        '--bg-secondary': '#f8f9fa',
-        '--bg-card': '#ffffff',
-        '--text-primary': '#333333',
-        '--text-secondary': '#666666',
-        '--border-color': 'rgba(0, 0, 0, 0.1)'
-    },
-    midnight: {
-        '--bg-primary': '#0f172a',
-        '--bg-secondary': '#1e293b',
-        '--bg-card': '#1e293b',
-        '--text-primary': '#f1f5f9',
-        '--text-secondary': '#94a3b8',
-        '--border-color': 'rgba(255, 255, 255, 0.1)'
-    },
-    forest: {
-        '--bg-primary': '#051a10',
-        '--bg-secondary': '#0a2518',
-        '--bg-card': '#0a2518',
-        '--text-primary': '#e2e8f0',
-        '--text-secondary': '#8ba895',
-        '--border-color': 'rgba(255, 255, 255, 0.1)'
-    }
-};
+// Themes are now handled via CSS variables and data-theme attribute
 
 export function renderAll(data) {
     if (!data) return;
@@ -47,12 +14,18 @@ function renderConfig(data) {
     if (!data) return;
 
     // Apply Theme
-    if (data.theme && themes[data.theme]) {
-        const theme = themes[data.theme];
-        const root = document.documentElement;
-        Object.entries(theme).forEach(([key, value]) => {
-            root.style.setProperty(key, value);
-        });
+    if (data.theme) {
+        document.documentElement.setAttribute('data-theme', data.theme);
+
+        // Specific class for Titanium Grid
+        if (data.theme === 'titanium') {
+            document.body.classList.add('grid-bg');
+        } else {
+            document.body.classList.remove('grid-bg');
+        }
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+        document.body.classList.remove('grid-bg');
     }
 
     // Hero
