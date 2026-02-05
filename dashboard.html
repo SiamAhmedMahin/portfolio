@@ -7,6 +7,7 @@
     <title>Portfolio Admin Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/admin_responsive.css">
 
     <!-- Supabase SDK -->
     <script src="js/supabase.js"></script>
@@ -44,16 +45,33 @@
 
     <!-- Dashboard App -->
     <div id="dashboard-app" class="hidden">
-        <aside class="sidebar">
+
+        <!-- Mobile Header -->
+        <header class="mobile-header">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <h2>Admin Dashboard</h2>
+        </header>
+
+        <!-- Sidebar Overlay -->
+        <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <aside class="sidebar" id="sidebar">
             <h2>CMS Dashboard</h2>
             <nav class="nav-tabs">
-                <button onclick="showTab('general')" class="active">General & Hero</button>
-                <button onclick="showTab('experience')">Experience</button>
-                <button onclick="showTab('projects')">Projects</button>
-                <button onclick="showTab('education')">Education</button>
-                <button onclick="showTab('skills')">Skills</button>
-                <button onclick="showTab('achievements')">Achievements</button>
-                <button onclick="showTab('themes')">Themes</button>
+                <button onclick="showTab('general'); closeSidebarMobile()" class="active">General & Hero</button>
+                <button onclick="showTab('experience'); closeSidebarMobile()">Experience</button>
+                <button onclick="showTab('projects'); closeSidebarMobile()">Projects</button>
+                <button onclick="showTab('education'); closeSidebarMobile()">Education</button>
+                <button onclick="showTab('skills'); closeSidebarMobile()">Skills</button>
+                <button onclick="showTab('achievements'); closeSidebarMobile()">Achievements</button>
+                <button onclick="showTab('themes'); closeSidebarMobile()">Themes</button>
                 <button onclick="logout()" style="margin-top: 2rem; background: #dc3545;">Logout</button>
             </nav>
         </aside>

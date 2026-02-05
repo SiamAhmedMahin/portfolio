@@ -55,6 +55,29 @@ async function logout() {
     window.location.reload();
 }
 
+// Sidebar Mobile Logic
+window.toggleSidebar = () => {
+    document.getElementById('sidebar').classList.toggle('active');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (document.getElementById('sidebar').classList.contains('active')) {
+        overlay.classList.add('active');
+        overlay.style.display = 'block';
+    } else {
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.style.display = 'none', 300);
+    }
+}
+
+window.closeSidebarMobile = () => {
+    // Only act if we are in mobile view (sidebar is fixed/absolute)
+    if (window.innerWidth <= 768) {
+        document.getElementById('sidebar').classList.remove('active');
+        const overlay = document.getElementById('sidebar-overlay');
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.style.display = 'none', 300);
+    }
+}
+
 // Tab Navigation
 window.showTab = (tabId) => {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
