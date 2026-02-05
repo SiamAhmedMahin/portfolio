@@ -75,8 +75,14 @@ function renderConfig(data) {
 
     // Hero
     setText('hero-title', data.heroName);
-    setText('nav-logo', (data.heroName || 'Portfolio').toUpperCase());
+    setText('nav-logo-text', (data.heroName || 'Portfolio').toUpperCase());
     setText('hero-subtitle', data.heroSubtitle);
+
+    // Nav Logo Image
+    const navLogoImg = document.querySelector('.logo-img');
+    if (navLogoImg && data.profileImage) {
+        navLogoImg.src = data.profileImage;
+    }
 
     // Image & Frame
     const imgObj = document.getElementById('hero-image');
