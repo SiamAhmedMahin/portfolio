@@ -8,6 +8,46 @@ const show = (id) => document.getElementById(id).classList.remove('hidden');
 const hide = (id) => document.getElementById(id).classList.add('hidden');
 const toggleLoader = (loading) => loading ? show('loader') : hide('loader');
 
+// --- MOBILE NAVIGATION ---
+window.toggleSidebar = () => {
+    console.log("Toggle sidebar clicked");
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    if (!sidebar || !overlay) {
+        console.error("Sidebar or Overlay not found");
+        return;
+    }
+
+    sidebar.classList.toggle('active');
+
+    if (sidebar.classList.contains('active')) {
+        overlay.style.display = 'block';
+        // Force reflow for transition
+        overlay.offsetHeight;
+        overlay.classList.add('active');
+    } else {
+        overlay.classList.remove('active');
+        setTimeout(() => {
+            if (!sidebar.classList.contains('active')) {
+                overlay.style.display = 'none';
+            }
+        }, 300);
+    }
+};
+
+window.closeSidebarMobile = () => {
+    if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (sidebar) sidebar.classList.remove('active');
+        if (overlay) {
+            overlay.classList.remove('active');
+            setTimeout(() => overlay.style.display = 'none', 300);
+        }
+    }
+};
+
 // --- AUTH STATE ---
 async function checkUser() {
     const { data: { session } } = await supabaseClient.auth.getSession();
@@ -53,29 +93,6 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 async function logout() {
     await supabaseClient.auth.signOut();
     window.location.reload();
-}
-
-// Sidebar Mobile Logic
-window.toggleSidebar = () => {
-    document.getElementById('sidebar').classList.toggle('active');
-    const overlay = document.getElementById('sidebar-overlay');
-    if (document.getElementById('sidebar').classList.contains('active')) {
-        overlay.classList.add('active');
-        overlay.style.display = 'block';
-    } else {
-        overlay.classList.remove('active');
-        setTimeout(() => overlay.style.display = 'none', 300);
-    }
-}
-
-window.closeSidebarMobile = () => {
-    // Only act if we are in mobile view (sidebar is fixed/absolute)
-    if (window.innerWidth <= 768) {
-        document.getElementById('sidebar').classList.remove('active');
-        const overlay = document.getElementById('sidebar-overlay');
-        overlay.classList.remove('active');
-        setTimeout(() => overlay.style.display = 'none', 300);
-    }
 }
 
 // Tab Navigation

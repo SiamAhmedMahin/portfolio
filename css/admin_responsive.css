@@ -24,7 +24,17 @@
     border: none;
     color: var(--text-primary);
     cursor: pointer;
-    padding: 5px;
+    padding: 12px;
+    /* Increased hit area */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: -10px;
+}
+
+.menu-toggle svg {
+    pointer-events: none;
+    /* Ensure click hits the button */
 }
 
 /* Sidebar Overlay */
@@ -35,14 +45,15 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 100;
+    background: rgba(0, 0, 0, 0.7);
+    /* Darker overlay */
+    z-index: 1000;
+    /* Higher than header */
     opacity: 0;
     transition: opacity 0.3s;
 }
 
 .sidebar-overlay.active {
-    display: block;
     opacity: 1;
 }
 
@@ -52,21 +63,30 @@
     /* Dashboard Layout Change */
     #dashboard-app {
         flex-direction: column;
+        height: 100vh;
+        height: -webkit-fill-available;
+        /* Better for mobile Safari */
     }
 
     .mobile-header {
         display: flex;
+        z-index: 999;
+        /* Below overlay but above content */
     }
 
     .sidebar {
         position: fixed;
         top: 0;
-        left: -260px;
-        /* Hide off-screen */
+        left: -280px;
+        /* More hidden to account for shadow */
+        width: 260px;
         height: 100vh;
-        z-index: 101;
-        transition: left 0.3s ease;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+        height: -webkit-fill-available;
+        z-index: 1001;
+        /* Highest */
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+        background: var(--bg-card);
     }
 
     .sidebar.active {
@@ -76,6 +96,14 @@
     .main-content {
         padding: 1.5rem;
         width: 100%;
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Ensure forms have space at bottom for Save button */
+    form {
+        padding-bottom: 5rem;
     }
 
     /* Adjust Modal */
