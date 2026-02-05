@@ -386,3 +386,109 @@ h1 {
     color: var(--text-primary);
     font-size: 1rem;
 }
+
+/* Photo Style Grid */
+.photo-style-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-top: 10px;
+}
+
+.photo-style-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.photo-style-card:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.photo-style-card.active {
+    border-color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.photo-style-preview {
+    width: 60px;
+    height: 60px;
+    background: #333;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Photo Style Previews */
+.photo-style-preview-inner {
+    width: 40px;
+    height: 40px;
+    background: #555;
+    position: relative;
+    transition: all 0.2s;
+}
+
+/* Miniature CSS for framing previews */
+.preview-soft {
+    mask-image: radial-gradient(circle at center, black 30%, transparent 95%);
+    -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 95%);
+}
+
+.preview-circle {
+    border-radius: 50%;
+    border: 1px solid #fff;
+}
+
+.preview-hexagon {
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.preview-square {
+    border: 1px solid #444;
+}
+
+.preview-square::before {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border: 1px solid #fff;
+    top: 0;
+    left: 0;
+    border-right: 0;
+    border-bottom: 0;
+}
+
+.preview-square::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border: 1px solid #fff;
+    bottom: 0;
+    right: 0;
+    border-left: 0;
+    border-top: 0;
+}
+
+.preview-blueprint {
+    border: 1px dashed #666;
+}
+
+.style-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.photo-style-card.active .style-name {
+    color: var(--text-primary);
+}

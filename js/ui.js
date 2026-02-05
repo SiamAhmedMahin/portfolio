@@ -33,14 +33,27 @@ function renderConfig(data) {
     setText('nav-logo', (data.heroName || 'Portfolio').toUpperCase());
     setText('hero-subtitle', data.heroSubtitle);
 
-    // Image
+    // Image & Frame
     const imgObj = document.getElementById('hero-image');
+    const imgContainer = imgObj?.parentElement;
+
     if (data.profileImage) {
         imgObj.src = data.profileImage;
     }
-    if (imgObj.complete) {
+
+    // Apply Framing Style
+    if (imgContainer) {
+        // Remove all previous frame classes
+        const frameClasses = ['frame-soft', 'frame-circle', 'frame-hexagon', 'frame-square', 'frame-blueprint'];
+        imgContainer.classList.remove(...frameClasses);
+
+        // Add new class (default to soft)
+        imgContainer.classList.add(data.heroPhotoStyle || 'frame-soft');
+    }
+
+    if (imgObj && imgObj.complete) {
         imgObj.style.opacity = '1';
-    } else {
+    } else if (imgObj) {
         imgObj.onload = () => imgObj.style.opacity = '1';
     }
 

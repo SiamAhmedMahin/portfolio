@@ -294,9 +294,89 @@ svg {
     width: 100%;
     max-width: 450px;
     position: relative;
-    /* Soften edges to blend into background */
+    margin-top: -3.5rem;
+    /* Shifting up as requested (slightly more for better visual) */
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+/* 1. Soft (Original) */
+.hero-image-container.frame-soft {
     mask-image: radial-gradient(circle at center, black 30%, transparent 95%);
     -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 95%);
+}
+
+/* 2. Circle */
+.hero-image-container.frame-circle {
+    border-radius: 50%;
+    border: 3px solid var(--primary-color);
+    overflow: hidden;
+    aspect-ratio: 1/1;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* 3. Hexagon */
+.hero-image-container.frame-hexagon {
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    background: var(--bg-card);
+    padding: 8px;
+}
+
+.hero-image-container.frame-hexagon img,
+.hero-image-container.frame-hexagon svg {
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+/* 4. Squared Tech */
+.hero-image-container.frame-square {
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    background: var(--bg-card);
+}
+
+.hero-image-container.frame-square::before,
+.hero-image-container.frame-square::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-color);
+    z-index: 10;
+}
+
+.hero-image-container.frame-square::before {
+    top: -5px;
+    left: -5px;
+    border-right: 0;
+    border-bottom: 0;
+}
+
+.hero-image-container.frame-square::after {
+    bottom: -5px;
+    right: -5px;
+    border-left: 0;
+    border-top: 0;
+}
+
+/* 5. Blueprint */
+.hero-image-container.frame-blueprint {
+    border: 1px dashed var(--primary-color);
+    padding: 12px;
+    background: rgba(33, 150, 243, 0.05);
+}
+
+.hero-image-container.frame-blueprint::after {
+    content: '[ REF_CAM_01 ]';
+    position: absolute;
+    bottom: -20px;
+    right: 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.6rem;
+    color: var(--primary-color);
+    letter-spacing: 1px;
 }
 
 .hero-image-container svg,
@@ -308,7 +388,7 @@ svg {
 }
 
 .hero-image-container:hover {
-    transform: scale(1.02);
+    transform: scale(1.02) translateY(-5px);
 }
 
 .hero-image-container:hover svg,

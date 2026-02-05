@@ -137,6 +137,8 @@ async function loadGeneral() {
             document.getElementById('profileImageUrl').value = val.profileImage;
             document.getElementById('profilePreview').src = val.profileImage;
         }
+
+        renderPhotoStyles(val.heroPhotoStyle);
     }
 }
 
@@ -158,6 +160,7 @@ document.getElementById('general-form').addEventListener('submit', async (e) => 
     globalConfig.aboutText = document.getElementById('aboutText').value;
     globalConfig.resumeUrl = document.getElementById('resumeUrl').value;
     globalConfig.profileImage = imageUrl;
+    globalConfig.heroPhotoStyle = document.getElementById('heroPhotoStyle').value;
     globalConfig.socials = {
         linkedin: document.getElementById('linkedinUrl').value,
         github: document.getElementById('githubUrl').value,
@@ -193,6 +196,7 @@ let selectedTheme = 'default';
 function renderThemes(currentTheme) {
     selectedTheme = currentTheme;
     const container = document.getElementById('theme-grid');
+    if (!container) return;
     container.innerHTML = availableThemes.map(t => `
         <div class="theme-card ${t.id === selectedTheme ? 'selected' : ''}" onclick="selectTheme('${t.id}')">
             <div class="theme-preview">
@@ -211,37 +215,53 @@ function renderThemes(currentTheme) {
 function applyThemeToDashboard(themeId) {
     const t = availableThemes.find(theme => theme.id === themeId);
     if (!t) return;
-
-    // Apply consistent variables to dashboard root
-    // Set Data Attribute for CSS handling
-    if (themeId) {
-        document.documentElement.setAttribute('data-theme', themeId);
-    } else {
-        document.documentElement.removeAttribute('data-theme');
-    }
-
-    // Apply basic vars for Dashboard specific elements (if needed fallback)
+    document.documentElement.setAttribute('data-theme', themeId);
     document.documentElement.style.setProperty('--bg-primary', t.bg);
     document.documentElement.style.setProperty('--bg-card', t.sec);
     document.documentElement.style.setProperty('--text-primary', t.txt);
-
-    // Force background
     document.body.style.backgroundColor = t.bg;
     document.body.style.color = t.txt;
-
-    // Add Grid BG class to body if titanium
-    if (themeId === 'titanium') {
-        document.body.classList.add('grid-bg');
-    } else {
-        document.body.classList.remove('grid-bg');
-    }
+    if (themeId === 'titanium') document.body.classList.add('grid-bg');
+    else document.body.classList.remove('grid-bg');
 }
 
 window.selectTheme = (id) => {
     selectedTheme = id;
     renderThemes(id);
-    applyThemeToDashboard(id); // Immediate visual feedback
+    applyThemeToDashboard(id);
 }
+
+/* Hero Framing Style Logic */
+const heroPhotoStyles = [
+    { id: 'frame-soft', name: 'Original Soft', preview: 'preview-soft' },
+    { id: 'frame-circle', name: 'Industrial Circle', preview: 'preview-circle' },
+    { id: 'frame-hexagon', name: 'Mech Hexagon', preview: 'preview-hexagon' },
+    { id: 'frame-square', name: 'Squared Tech', preview: 'preview-square' },
+    { id: 'frame-blueprint', name: 'Blueprint View', preview: 'preview-blueprint' }
+];
+
+let selectedPhotoStyle = 'frame-soft';
+
+function renderPhotoStyles(currentStyle) {
+    selectedPhotoStyle = currentStyle || 'frame-soft';
+    const container = document.getElementById('photo-style-grid');
+    if (!container) return;
+
+    container.innerHTML = heroPhotoStyles.map(s => `
+        <div class="photo-style-card ${s.id === selectedPhotoStyle ? 'active' : ''}" onclick="selectPhotoStyle('${s.id}')">
+            <div class="photo-style-preview">
+                <div class="photo-style-preview-inner ${s.preview}"></div>
+            </div>
+            <div class="style-name">${s.name}</div>
+        </div>
+    `).join('');
+    document.getElementById('heroPhotoStyle').value = selectedPhotoStyle;
+}
+
+window.selectPhotoStyle = (id) => {
+    selectedPhotoStyle = id;
+    renderPhotoStyles(id);
+};
 
 window.saveThemeConfig = async () => {
     toggleLoader(true);
