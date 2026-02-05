@@ -143,6 +143,13 @@ async function loadGeneral() {
     }
 }
 
+window.resetGeneralTab = () => {
+    if (confirm('Discard all unsaved changes in this tab?')) {
+        loadGeneral();
+    }
+};
+
+
 
 document.getElementById('general-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -320,6 +327,24 @@ window.closeCropModal = () => {
     }
     document.getElementById('crop-modal').classList.add('hidden');
 };
+
+window.resetCrop = async () => {
+    if (confirm('Permanently remove cropping and zoom configurations for this image?')) {
+        delete globalConfig.profileCrop;
+
+        toggleLoader(true);
+        const { error } = await supabaseClient.from('config').upsert({ key: 'global', value: globalConfig });
+        toggleLoader(false);
+
+        if (error) {
+            alert('Error resetting crop: ' + error.message);
+        } else {
+            closeCropModal();
+            alert('Crop reset to original image.');
+        }
+    }
+};
+
 
 window.saveCrop = async () => {
     if (!cropper) return;

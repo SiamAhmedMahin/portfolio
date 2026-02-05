@@ -144,7 +144,12 @@
                         <label>Email Address</label>
                         <input type="text" name="email" id="emailContact">
                     </div>
-                    <button type="submit" class="btn-primary">Save Changes</button>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                        <button type="button" onclick="resetGeneralTab()" class="btn-secondary"
+                            style="background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); width: auto;">Reset
+                            All</button>
+                    </div>
                 </form>
             </div>
 
@@ -237,6 +242,8 @@
                 <img id="cropper-image" src="" alt="">
             </div>
             <div class="crop-actions">
+                <button type="button" onclick="resetCrop()" class="btn-secondary"
+                    style="background: #dc3545; border-color: #dc3545; color: white;">Reset Crop</button>
                 <button type="button" onclick="saveCrop()" class="btn-primary">Apply Crop</button>
                 <button type="button" onclick="closeCropModal()" class="btn-secondary">Cancel</button>
             </div>
