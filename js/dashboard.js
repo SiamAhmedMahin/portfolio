@@ -8,6 +8,11 @@ const show = (id) => document.getElementById(id).classList.remove('hidden');
 const hide = (id) => document.getElementById(id).classList.add('hidden');
 const toggleLoader = (loading) => loading ? show('loader') : hide('loader');
 
+// Global State
+let globalConfig = {};
+let selectedTheme = 'default';
+let selectedPhotoStyle = 'frame-soft';
+
 // --- MOBILE NAVIGATION ---
 window.toggleSidebar = () => {
     console.log("Toggle sidebar clicked");
@@ -90,7 +95,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     }
 });
 
-async function logout() {
+window.logout = async function () {
     await supabaseClient.auth.signOut();
     window.location.reload();
 }
@@ -114,7 +119,7 @@ window.showTab = (tabId) => {
 // --- DATA HANDLING ---
 
 /* 1. General Config */
-let globalConfig = {}; // Store full config
+// (globalConfig declared at top)
 
 async function loadGeneral() {
     const { data, error } = await supabaseClient.from('config').select('*').eq('key', 'global').single();
@@ -193,37 +198,54 @@ document.getElementById('general-form').addEventListener('submit', async (e) => 
 });
 
 window.saveAllChanges = async () => {
+    console.log("Save All Changes triggered");
     toggleLoader(true);
 
-    // Collect General & Hero Data
-    globalConfig.heroName = document.getElementById('heroName').value;
-    globalConfig.heroSubtitle = document.getElementById('heroSubtitle').value;
-    globalConfig.aboutText = document.getElementById('aboutText').value;
-    globalConfig.resumeUrl = document.getElementById('resumeUrl').value;
-    globalConfig.profileImage = document.getElementById('profileImageUrl').value;
-    globalConfig.heroPhotoStyle = document.getElementById('heroPhotoStyle').value;
+    try {
+        // Handle Image Upload if a new file is selected but not yet uploaded
+        const fileInput = document.getElementById('profileImageInput');
+        let imageUrl = document.getElementById('profileImageUrl').value;
 
-    // Theme Data (selectedTheme is updated via selectTheme and used in saveThemeConfig)
-    globalConfig.theme = selectedTheme;
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+            console.log("Uploading new profile image...");
+            imageUrl = await uploadFile(fileInput.files[0], 'profile');
+            if (imageUrl) {
+                document.getElementById('profileImageUrl').value = imageUrl;
+                document.getElementById('profilePreview').src = imageUrl;
+                document.getElementById('crop-controls').classList.remove('hidden');
+            }
+        }
 
-    globalConfig.socials = {
-        linkedin: document.getElementById('linkedinUrl').value,
-        github: document.getElementById('githubUrl').value,
-        facebook: document.getElementById('facebookUrl').value,
-        email: document.getElementById('emailContact').value
-    };
+        // Collect General & Hero Data
+        globalConfig.heroName = document.getElementById('heroName').value;
+        globalConfig.heroSubtitle = document.getElementById('heroSubtitle').value;
+        globalConfig.aboutText = document.getElementById('aboutText').value;
+        globalConfig.resumeUrl = document.getElementById('resumeUrl').value;
+        globalConfig.profileImage = imageUrl;
+        globalConfig.heroPhotoStyle = document.getElementById('heroPhotoStyle').value;
 
-    // Any other global fields can be added here
+        // Theme Data
+        globalConfig.theme = selectedTheme;
 
-    const { error } = await supabaseClient.from('config').upsert({ key: 'global', value: globalConfig });
-    toggleLoader(false);
+        globalConfig.socials = {
+            linkedin: document.getElementById('linkedinUrl').value,
+            github: document.getElementById('githubUrl').value,
+            facebook: document.getElementById('facebookUrl').value,
+            email: document.getElementById('emailContact').value
+        };
 
-    if (error) {
-        alert('Error saving all changes: ' + error.message);
-    } else {
+        console.log("Saving global config:", globalConfig);
+        const { error } = await supabaseClient.from('config').upsert({ key: 'global', value: globalConfig });
+
+        if (error) throw error;
+
         alert('All changes saved successfully!');
-        // Refresh to ensure everything is in sync
-        loadGeneral();
+        loadGeneral(); // Refresh UI
+    } catch (err) {
+        console.error("Save All Changes Error:", err);
+        alert('Error saving all changes: ' + (err.message || err));
+    } finally {
+        toggleLoader(false);
     }
 };
 
@@ -245,7 +267,7 @@ const availableThemes = [
     { id: 'light', name: 'Professional Light', bg: '#ffffff', sec: '#f8f9fa', txt: '#333333' }
 ];
 
-let selectedTheme = 'default';
+// (selectedTheme declared at top)
 
 function renderThemes(currentTheme) {
     selectedTheme = currentTheme;
@@ -294,7 +316,7 @@ const heroPhotoStyles = [
     { id: 'frame-blueprint', name: 'Blueprint View', preview: 'preview-blueprint' }
 ];
 
-let selectedPhotoStyle = 'frame-soft';
+// (selectedPhotoStyle declared at top)
 
 function renderPhotoStyles(currentStyle) {
     selectedPhotoStyle = currentStyle || 'frame-soft';
