@@ -108,6 +108,56 @@ body {
     color: var(--text-primary);
 }
 
+.btn-save-all {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    text-align: left;
+    background: var(--accent-blue);
+    border: none;
+    cursor: pointer;
+    margin-top: 2rem;
+    margin-bottom: 5px;
+    border-radius: 6px;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+}
+
+.btn-save-all:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-save-all:active {
+    transform: translateY(0);
+}
+
+.btn-logout {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    text-align: left;
+    background: var(--danger);
+    border: none;
+    cursor: pointer;
+    margin-top: 5px;
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: bold;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    transition: all 0.2s;
+}
+
+.btn-logout:hover {
+    opacity: 0.9;
+    background: #b21f2d;
+}
+
 /* Dashboard Layout */
 #dashboard-app {
     display: flex;

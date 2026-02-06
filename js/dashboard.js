@@ -192,6 +192,41 @@ document.getElementById('general-form').addEventListener('submit', async (e) => 
     else alert('Saved!');
 });
 
+window.saveAllChanges = async () => {
+    toggleLoader(true);
+
+    // Collect General & Hero Data
+    globalConfig.heroName = document.getElementById('heroName').value;
+    globalConfig.heroSubtitle = document.getElementById('heroSubtitle').value;
+    globalConfig.aboutText = document.getElementById('aboutText').value;
+    globalConfig.resumeUrl = document.getElementById('resumeUrl').value;
+    globalConfig.profileImage = document.getElementById('profileImageUrl').value;
+    globalConfig.heroPhotoStyle = document.getElementById('heroPhotoStyle').value;
+
+    // Theme Data (selectedTheme is updated via selectTheme and used in saveThemeConfig)
+    globalConfig.theme = selectedTheme;
+
+    globalConfig.socials = {
+        linkedin: document.getElementById('linkedinUrl').value,
+        github: document.getElementById('githubUrl').value,
+        facebook: document.getElementById('facebookUrl').value,
+        email: document.getElementById('emailContact').value
+    };
+
+    // Any other global fields can be added here
+
+    const { error } = await supabaseClient.from('config').upsert({ key: 'global', value: globalConfig });
+    toggleLoader(false);
+
+    if (error) {
+        alert('Error saving all changes: ' + error.message);
+    } else {
+        alert('All changes saved successfully!');
+        // Refresh to ensure everything is in sync
+        loadGeneral();
+    }
+};
+
 
 window.resetProfileImage = () => {
     const defaultPath = 'assets/Khandaker%20Siam%20Ahmed.svg';
