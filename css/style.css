@@ -990,11 +990,11 @@ svg {
 
 .modal-banner {
     width: 100%;
-    height: 60vh;
-    object-fit: cover;
+    max-height: 80vh;
+    object-fit: contain;
     display: block;
-    mask-image: linear-gradient(to bottom, black 80%, transparent);
-    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent);
+    margin: 0 auto;
+    background: var(--bg-secondary);
 }
 
 /* YouTube Embed Container */
